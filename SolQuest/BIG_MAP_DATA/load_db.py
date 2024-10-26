@@ -1,6 +1,4 @@
 import json
-import pdb
-
 import numpy as np
 
 
@@ -33,18 +31,14 @@ if __name__ == "__main__":
     # Extract Symbols
     SYMBOLS = EGP_data["SYMBOLS"]
     # Extract Coordinates, including conformers, ordered by energy
-    COORDS = np.array(EGP_data["COORDS"])
+    COORDS = EGP_data["COORDS"]
     # For instance this entry has 16 conformers
     print("(#conformers, #atoms, #coordinates)")
     print(np.array(COORDS[100]).shape)
     # Extract Atomization energies, again also ordered by energy and for each conformer
-    ATOMIZATION = np.array(EGP_data["ATOMIZATION"])
+    ATOMIZATION = EGP_data["ATOMIZATION"]
     # Extract Dipole moments
-    DIPOLE = np.array(EGP_data["DIPOLE"])
-    # Note that the first entry is the total dipole moment of each conformer (vector norm)
-    print(np.array(DIPOLE[100])[0])
-    # the second entry is the dipole moment vector of the each conformer
-    print(np.array(DIPOLE[100])[1])
+    DIPOLE = EGP_data["DIPOLE"]
     # Extract Energies, (only the lowest energy conformer)
     ENERGY = np.array(EGP_data["ENERGY"])
     # Extract Solvation energies
@@ -54,5 +48,3 @@ if __name__ == "__main__":
     # print a list of all availible solvents
     print(SOLVATION.keys())
     print("number of molecules in EGP dataset: ", len(SMILES))
-
-    pdb.set_trace()
