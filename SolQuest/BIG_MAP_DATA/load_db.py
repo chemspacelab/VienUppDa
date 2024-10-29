@@ -1,6 +1,6 @@
 import json
 import numpy as np
-
+import pdb
 
 class Load_datasets:
     def __init__(self, dataset_name="EGP"):
@@ -21,30 +21,57 @@ class Load_datasets:
 
 
 if __name__ == "__main__":
-    # For example load EGP dataset
-    loader = Load_datasets("EGP")
-    EGP_data = loader.data
-    # Extract ECFP Fingerprints
-    X = np.array(EGP_data["ECFP"])
-    # Extract SMILES
-    SMILES = EGP_data["SMILES"]
-    # Extract Symbols
-    SYMBOLS = EGP_data["SYMBOLS"]
-    # Extract Coordinates, including conformers, ordered by energy
-    COORDS = EGP_data["COORDS"]
-    # For instance this entry has 16 conformers
-    print("(#conformers, #atoms, #coordinates)")
-    print(np.array(COORDS[100]).shape)
-    # Extract Atomization energies, again also ordered by energy and for each conformer
-    ATOMIZATION = EGP_data["ATOMIZATION"]
-    # Extract Dipole moments
-    DIPOLE = EGP_data["DIPOLE"]
-    # Extract Energies, (only the lowest energy conformer)
-    ENERGY = np.array(EGP_data["ENERGY"])
-    # Extract Solvation energies
-    SOLVATION = EGP_data["SOLVATION"]
-    # get the solvation energy for solvent water and molecule 100
-    print(SOLVATION["h2o"][100])
-    # print a list of all availible solvents
-    print(SOLVATION.keys())
-    print("number of molecules in EGP dataset: ", len(SMILES))
+
+    dataset_name = "GDB17"
+    loader = Load_datasets(dataset_name)
+    DATA = loader.data
+
+    if "AMONS" in dataset_name:
+        nr_amons = 0
+        for key in DATA.keys():
+            # pdb.set_trace()
+            SUBDATA = DATA[key]
+
+            # Extract ECFP Fingerprints
+            X = np.array(SUBDATA["ECFP"])
+            # Extract SMILES
+            SMILES = SUBDATA["SMILES"]
+            # Extract Symbols
+            SYMBOLS = SUBDATA["SYMBOLS"]
+            # Extract Coordinates, including conformers, ordered by energy
+            COORDS = SUBDATA["COORDS"]
+            # Extract Atomization energies, again also ordered by energy and for each conformer
+            ATOMIZATION = SUBDATA["ATOMIZATION"]
+            # Extract Dipole moments
+            DIPOLE = SUBDATA["DIPOLE"]
+            # Extract Energies, (only the lowest energy conformer)
+            ENERGY = np.array(SUBDATA["ENERGY"])
+            # Extract Solvation energies
+            SOLVATION = SUBDATA["SOLVATION"]
+            # get the solvation energy for solvent water and molecule 100
+            print("number of molecules in {} dataset: ".format(dataset_name), len(SMILES))
+
+            nr_amons += len(SMILES)
+
+        print("number of amons in {} dataset: ".format(dataset_name), nr_amons)
+
+    else:
+
+        X = np.array(DATA["ECFP"])
+        # Extract SMILES
+        SMILES = DATA["SMILES"]
+        # Extract Symbols
+        SYMBOLS = DATA["SYMBOLS"]
+        # Extract Coordinates, including conformers, ordered by energy
+        COORDS = DATA["COORDS"]
+        # Extract Atomization energies, again also ordered by energy and for each conformer
+        ATOMIZATION = DATA["ATOMIZATION"]
+        # Extract Dipole moments
+        DIPOLE = DATA["DIPOLE"]
+        # Extract Energies, (only the lowest energy conformer)
+        ENERGY = np.array(DATA["ENERGY"])
+        # Extract Solvation energies
+        SOLVATION = DATA["SOLVATION"]
+        # get the solvation energy for solvent water and molecule 100
+        print("number of molecules in {} dataset: ".format(dataset_name), len(SMILES))
+        #pdb.set_trace()
