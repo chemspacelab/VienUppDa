@@ -35,27 +35,27 @@ if __name__ == "__main__":
             DIPOLE_2,
         ) = extract_EGP(all_egp_2)
 
-        SYMBOLS = np.concatenate((SYMBOLS_1, SYMBOLS_2))
-        SMILES = np.concatenate((SMILES_1, SMILES_2))
-        COORDS = np.concatenate((COORDS_1, COORDS_2))
+        SYMBOLS = SYMBOLS_1 + SYMBOLS_2
+        SMILES = SMILES_1+SMILES_2
+        COORDS = COORDS_1 + COORDS_2
         X = np.concatenate((X_1, X_2))
         SOLVATION = combine_dictionaries(SOLVATION_1, SOLVATION_2)
-        ATOMIZATION = np.concatenate((ATOMIZATION_1, ATOMIZATION_2))
-        DIPOLE = np.concatenate((DIPOLE_1, DIPOLE_2))
+        ATOMIZATION = ATOMIZATION_1+ATOMIZATION_2
+        DIPOLE = DIPOLE_1+DIPOLE_2
         ENERGY = np.concatenate((ENERGY_1, ENERGY_2))
 
         UNIQUE = find_unique_indices(SMILES)
 
-        X = X[UNIQUE]
-        SMILES = SMILES[UNIQUE]
-        SYMBOLS = SYMBOLS[UNIQUE]
-        COORDS = COORDS[UNIQUE]
-        ATOMIZATION = ATOMIZATION[UNIQUE]
-        DIPOLE = DIPOLE[UNIQUE]
-        ENERGY = ENERGY[UNIQUE]
+        X = [X[i] for i in UNIQUE]
+        SMILES = [SMILES[i] for i in UNIQUE]
+        SYMBOLS = [SYMBOLS[i] for i in UNIQUE]
+        COORDS = [COORDS[i] for i in UNIQUE]
+        ATOMIZATION = [ATOMIZATION[i] for i in UNIQUE]
+        DIPOLE = [DIPOLE[i] for i in UNIQUE]
+        ENERGY = [ENERGY[i] for i in UNIQUE]
         SOLVATION_NEW = {}
         for key in SOLVATION.keys():
-            SOLVATION_NEW[key] = SOLVATION[key][UNIQUE]
+            SOLVATION_NEW[key] = [SOLVATION[key][i] for i in UNIQUE]
 
         EGP_data_dict = {
             "ECFP": X,
@@ -95,27 +95,27 @@ if __name__ == "__main__":
             DIPOLE_2,
         ) = extract_GDB17(GDB17_2)
 
-        SYMBOLS = np.concatenate((SYMBOLS_1, SYMBOLS_2))
-        SMILES = np.concatenate((SMILES_1, SMILES_2))
-        COORDS = np.concatenate((COORDS_1, COORDS_2))
+        SYMBOLS = SYMBOLS_1+ SYMBOLS_2
+        SMILES = SMILES_1+SMILES_2
+        COORDS = COORDS_1+COORDS_2
         X = np.concatenate((X_1, X_2))
         SOLVATION = combine_dictionaries(SOLVATION_1, SOLVATION_2)
-        ATOMIZATION = np.concatenate((ATOMIZATION_1, ATOMIZATION_2))
-        DIPOLE = np.concatenate((DIPOLE_1, DIPOLE_2))
+        ATOMIZATION = ATOMIZATION_1+ATOMIZATION_2
+        DIPOLE = DIPOLE_1+DIPOLE_2
         ENERGY = np.concatenate((ENERGY_1, ENERGY_2))
 
         UNIQUE = find_unique_indices(SMILES)
 
-        X = X[UNIQUE]
-        SMILES = SMILES[UNIQUE]
-        SYMBOLS = SYMBOLS[UNIQUE]
-        COORDS = COORDS[UNIQUE]
-        ATOMIZATION = ATOMIZATION[UNIQUE]
-        DIPOLE = DIPOLE[UNIQUE]
-        ENERGY = ENERGY[UNIQUE]
+        X = [X[i] for i in UNIQUE]
+        SMILES = [SMILES[i] for i in UNIQUE]
+        SYMBOLS = [SYMBOLS[i] for i in UNIQUE]
+        COORDS = [COORDS[i] for i in UNIQUE]
+        ATOMIZATION = [ATOMIZATION[i] for i in UNIQUE]
+        DIPOLE = [DIPOLE[i] for i in UNIQUE]
+        ENERGY = [ENERGY[i] for i in UNIQUE]
         SOLVATION_NEW = {}
         for key in SOLVATION.keys():
-            SOLVATION_NEW[key] = SOLVATION[key][UNIQUE]
+            SOLVATION_NEW[key] = [SOLVATION[key][i] for i in UNIQUE]
 
         GDB17_data_dict = {
             "ECFP": X,

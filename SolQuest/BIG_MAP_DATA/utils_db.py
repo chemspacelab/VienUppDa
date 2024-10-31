@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import umap
-from qml.utils import alchemy
+from qml2.data import NUCLEAR_CHARGE
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from sklearn.decomposition import IncrementalPCA
@@ -104,10 +104,10 @@ def extract_amons_zinc(amon_data, amon_file="ni1"):
                 for solv in solvent_names_array:
                     try:
                         value = amon_data[amon_file]["data"]["amons_ZINC"][name][solv]
-                        if value < 30 and value > -80:
-                            CURR_SOLV.append(value)
-                        else:
-                            CURR_SOLV.append(np.nan)
+#                        if value < 30 and value > -80:
+                        CURR_SOLV.append(value)
+#                        else:
+#                            CURR_SOLV.append(np.nan)
                     except:
                         CURR_SOLV.append(np.nan)
                 SOLVATION.append(CURR_SOLV)
@@ -130,13 +130,13 @@ def extract_amons_zinc(amon_data, amon_file="ni1"):
 
     X, SYMBOLS, COORDS, SMILES, ATOMIZATION, ENERGY, SOLVATION, DIPOLE = (
         np.array(X),
-        np.array(SYMBOLS),
-        np.array(COORDS),
-        np.array(SMILES),
-        np.array(ATOMIZATION),
+        SYMBOLS,
+        COORDS,
+        SMILES,
+        ATOMIZATION,
         np.array(ENERGY),
         np.array(SOLVATION),
-        np.array(DIPOLE),
+        DIPOLE,
     )
 
     SOLV_DATA = {}
@@ -192,10 +192,11 @@ def extract_gdb17_amons(amon_data, amon_file="ni1"):
                 for solv in solvent_names_array:
                     try:
                         value = amon_data[amon_file]["data"]["amons_GDB17"][name][solv]
-                        if value < 30 and value > -80:
-                            CURR_SOLV.append(value)
-                        else:
-                            CURR_SOLV.append(np.nan)
+#                        if value < 30 and value > -80:
+#                            CURR_SOLV.append(value)
+                        CURR_SOLV.append(value)
+#                        else:
+#                            CURR_SOLV.append(np.nan)
                     except:
                         CURR_SOLV.append(np.nan)
 
@@ -219,13 +220,13 @@ def extract_gdb17_amons(amon_data, amon_file="ni1"):
 
     X, SYMBOLS, COORDS, SMILES, ATOMIZATION, ENERGY, SOLVATION, DIPOLE = (
         np.array(X),
-        np.array(SYMBOLS),
-        np.array(COORDS),
-        np.array(SMILES),
-        np.array(ATOMIZATION),
+        SYMBOLS,
+        COORDS,
+        SMILES,
+        ATOMIZATION,
         np.array(ENERGY),
         np.array(SOLVATION),
-        np.array(DIPOLE),
+        DIPOLE,
     )
 
     SOLV_DATA = {}
@@ -274,14 +275,15 @@ def check_if_in_dictionary(symbols):
 
 
 def check_connected_charged(smiles):
-    if "-" not in smiles and "." not in smiles and "+" not in smiles:
-        return True
-    else:
-        return False
+    return True
+#    if "-" not in smiles and "." not in smiles and "+" not in smiles:
+#        return True
+#    else:
+#        return False
 
 
 def symbols2nuclear_charges(symbols):
-    return np.array([alchemy.NUCLEAR_CHARGE[at] for at in symbols])
+    return np.array([NUCLEAR_CHARGE[at] for at in symbols])
 
 
 def extract_smiles(nuc_q, coords, charge=0):
@@ -333,10 +335,10 @@ def extract_EGP(all_egp):
                 for solv in solvent_names_array:
                     try:
                         value = all_egp["EGP"][name][solv]
-                        if value < 30 and value > -80:
-                            CURR_SOLV.append(value)
-                        else:
-                            CURR_SOLV.append(np.nan)
+#                        if value < 30 and value > -80:
+                        CURR_SOLV.append(value)
+#                        else:
+#                            CURR_SOLV.append(np.nan)
                     except:
                         CURR_SOLV.append(np.nan)
 
@@ -354,13 +356,13 @@ def extract_EGP(all_egp):
 
     X, SYMBOLS, COORDS, SMILES, ATOMIZATION, ENERGY, SOLVATION, DIPOLE = (
         np.array(X),
-        np.array(SYMBOLS),
-        np.array(COORDS),
-        np.array(SMILES),
-        np.array(ATOMIZATION),
+        SYMBOLS,
+        COORDS,
+        SMILES,
+        ATOMIZATION,
         np.array(ENERGY),
         np.array(SOLVATION),
-        np.array(DIPOLE),
+        DIPOLE,
     )
 
     SOLV_DATA = {}
@@ -413,10 +415,10 @@ def extract_GDB17(all_GDB17):
                 for solv in solvent_names_array:
                     try:
                         value = all_GDB17["data"]["gdb17"][name][solv]
-                        if value < 30 and value > -80:
-                            CURR_SOLV.append(value)
-                        else:
-                            CURR_SOLV.append(np.nan)
+#                        if value < 30 and value > -80:
+                        CURR_SOLV.append(value)
+#                        else:
+#                            CURR_SOLV.append(np.nan)
                     except:
                         CURR_SOLV.append(np.nan)
 
@@ -435,13 +437,13 @@ def extract_GDB17(all_GDB17):
 
     X, SYMBOLS, COORDS, SMILES, ATOMIZATION, ENERGY, SOLVATION, DIPOLE = (
         np.array(X),
-        np.array(SYMBOLS),
-        np.array(COORDS),
-        np.array(SMILES),
-        np.array(ATOMIZATION),
+        SYMBOLS,
+        COORDS,
+        SMILES,
+        ATOMIZATION,
         np.array(ENERGY),
         np.array(SOLVATION),
-        np.array(DIPOLE),
+        DIPOLE,
     )
 
     SOLV_DATA = {}
