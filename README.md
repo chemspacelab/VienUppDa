@@ -1,6 +1,6 @@
 # VienUppDa
 
-Scripts used during the collaboration between University of **Vien**na and University of **Upp**sala on generating accurate reference **da**ta for machine learning algorithm testing and validation. The computational protocol is outlined in the [corresponding manuscript](https://arxiv.org/XXXXX) with the resulting data uploaded to [Zenodo](https://zenodo.org/records/11036086).
+Scripts used during the collaboration between University of **Vien**na and University of **Upp**sala on generating accurate reference **da**ta for machine learning algorithm testing and validation. The computational protocol is outlined in the [corresponding manuscript](https://arxiv.org/XXXXX) with the resulting data uploaded to [Zenodo](https://zenodo.org/records/13952172).
 
 # Repository structure
 
