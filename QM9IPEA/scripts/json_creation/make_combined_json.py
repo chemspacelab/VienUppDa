@@ -16,7 +16,10 @@ atom_mol_method_dict = {
     "PNO-UCCSD(T*)-F12B": "PNO-LCCSD(T*)-F12B",
 }
 
+# au2eV = 27.211598535
 MANDATORY_PROGRAM_FIELDS = ["INT", "FILE", "RESTART"]
+
+flnan = float("nan")
 
 
 def xyz_subdir_to_qm9_id(subdir):
@@ -92,7 +95,7 @@ def get_CPU_times(lines):
         output[prog] = val
     for mand_prog in MANDATORY_PROGRAM_FIELDS:
         if mand_prog not in output:
-            output[mand_prog] = float("nan")
+            output[mand_prog] = flnan
 
     return output
 
@@ -124,6 +127,66 @@ def calculation_results(filename):
     if not calculation_converged(lines):
         return None, None, None
     return get_energies(lines), get_CPU_times(lines), get_total_disk_usage(lines)
+
+
+def get_orb_en(quant, lines):
+    val = None
+    for l in lines:
+        lspl = l.split()
+        if len(lspl) == 0:
+            continue
+        if lspl[0] != quant:
+            continue
+        assert val is None
+        assert lspl[-1][-2:] == "eV"
+        val = float(lspl[-3])
+    assert val is not None
+    return val
+
+
+def get_HOMO_LUMO(filename):
+    lines = get_file_lines(filename)
+    if not calculation_converged(lines):
+        return flnan, flnan
+    output = []
+    for quant in ["HOMO", "LUMO"]:
+        output.append(get_orb_en(quant, lines))
+    return output
+
+
+def charge_energy_dict(ground_state_energies, charged_energies, charge):
+    output = {}
+    for excited_method, ground_method in atom_mol_method_dict.items():
+        if (charged_energies is None) or (ground_state_energies is None):
+            val = flnan
+        else:
+            val = (
+                charged_energies[excited_method] - ground_state_energies[ground_method]
+            )
+            if charge == -1:
+                val *= -1
+        output[ground_method] = val
+    return output
+
+
+def append_ionization_data_quantity(
+    output_dict, diff_charge_cur_energies, other_charge
+):
+    ground_state_energies = diff_charge_cur_energies[0]
+    charged_energies = diff_charge_cur_energies[other_charge]
+    diff_dict = charge_energy_dict(
+        ground_state_energies, charged_energies, other_charge
+    )
+    if len(output_dict) == 0:
+        for k in diff_dict.keys():
+            output_dict[k] = []
+    for k, val in diff_dict.items():
+        output_dict[k].append(val)
+
+
+def append_ionization_data(IEs, EAs, diff_charge_cur_energies):
+    append_ionization_data_quantity(IEs, diff_charge_cur_energies, 1)
+    append_ionization_data_quantity(EAs, diff_charge_cur_energies, -1)
 
 
 def get_symbols_coords(filename):
@@ -176,7 +239,7 @@ init_atom_energy_dict()
 
 def atomization_energy(tot_energies, method, elements):
     if tot_energies is None:
-        return float("nan")
+        return flnan
     aen = tot_energies[method]
     for el in elements:
         aen -= atom_energy_dict[el][method]
@@ -190,6 +253,11 @@ all_coords = []
 all_symbols = []
 
 qm9_ids = []
+
+HOMOs = []
+LUMOs = []
+IEs = {}
+EAs = {}
 
 energies = {}
 CPU_times = {}
@@ -207,9 +275,11 @@ for xyz_subdir in all_xyz_subdirs:
     symbols, coords = get_symbols_coords(filename_root(xyz_subdir) + "inp")
     all_symbols.append(symbols)
     all_coords.append(coords)
+    diff_charge_cur_energies = {}
     for charge in charges:
         result_file = filename_root(xyz_subdir, charge=charge) + "out"
         cur_energies, cur_CPU_times, disk_usage = calculation_results(result_file)
+        diff_charge_cur_energies[charge] = cur_energies
         if charge == 0:
             for method in cur_atom_methods:
                 if method not in atomization_energies:
@@ -217,11 +287,13 @@ for xyz_subdir in all_xyz_subdirs:
                 atomization_energies[method].append(
                     atomization_energy(cur_energies, method, symbols)
                 )
+            HOMO, LUMO = get_HOMO_LUMO(result_file)
+            HOMOs.append(HOMO)
+            LUMOs.append(LUMO)
         if cur_energies is None:
             cur_methods = list(energies[charge].keys())
             cur_programs = list(CPU_times[charge].keys())
             assert len(cur_methods) != 0
-            flnan = float("nan")
             for method in cur_methods:
                 energies[charge][method].append(flnan)
             for program in cur_programs:
@@ -238,6 +310,7 @@ for xyz_subdir in all_xyz_subdirs:
                 CPU_times[charge][program] = []
             CPU_times[charge][program].append(CPU_time)
         disk_usages[charge].append(disk_usage)
+    append_ionization_data(IEs, EAs, diff_charge_cur_energies)
 
 final_dict = {
     "COORDS": all_coords,
@@ -246,6 +319,10 @@ final_dict = {
     "CPU_TIME": CPU_times,
     "DISK_USAGE": disk_usages,
     "ATOMIZATION_ENERGY": atomization_energies,
+    "IONIZATION_ENERGY": IEs,
+    "ELECTRON_AFFINITY": EAs,
+    "HOMO_ENERGY": HOMOs,
+    "LUMO_ENERGY": LUMOs,
     "QM9_ID": qm9_ids,
 }
 
