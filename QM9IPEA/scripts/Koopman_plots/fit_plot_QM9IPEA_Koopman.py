@@ -15,6 +15,21 @@ matplotlib.rc(
     **font,
 )
 
+method_label_dict = {
+    "DFHF": "DF-HF",
+    "DFHF+CABS": "DF-HF-CABS",
+    "PNO-LCCSD-F12B": "PNO-LCCSD-F12b",
+    "PNO-LCCSD(T)-F12B": "PNO-LCCSD(T)-F12b",
+    "PNO-LCCSD(T*)-F12B": "PNO-LCCSD(T*)-F12b",
+}
+
+
+def get_method_label(method_name):
+    if method_name in method_label_dict:
+        return method_label_dict[method_name]
+    return method_name
+
+
 trend_fontsize = 12.5
 legend_fontsize = 12.5
 axis_fontsize = 12.5
@@ -187,7 +202,7 @@ def plot_corr(
             "dashed",
         )
         if latex_output is not None:
-            latex_output.append([method, slope, intercept, R_eq])
+            latex_output.append([get_method_label(method), slope, intercept, R_eq])
     else:
         assert quant_orb == LUMO_lbl
         slope1, intercept1, R_eq1 = plot_with(
@@ -220,7 +235,16 @@ def plot_corr(
         )
         if latex_output is not None:
             latex_output.append(
-                [method, slope1, intercept1, R_eq1, phantom, slope2, intercept2, R_eq2]
+                [
+                    get_method_label(method),
+                    slope1,
+                    intercept1,
+                    R_eq1,
+                    phantom,
+                    slope2,
+                    intercept2,
+                    R_eq2,
+                ]
             )
     # the line equation:
     ax.set_xlim(all_xrange)
@@ -237,7 +261,7 @@ def plot_corr(
     #    else:
     #        plt.setp(ax.get_yticklabels(),visible = False)
     if display_title:
-        ax.set_title(method, fontsize=title_fontsize)
+        ax.set_title(get_method_label(method), fontsize=title_fontsize)
     return ax.get_legend_handles_labels()
 
 
